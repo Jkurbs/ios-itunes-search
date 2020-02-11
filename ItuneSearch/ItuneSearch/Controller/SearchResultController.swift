@@ -24,8 +24,15 @@ class SearchResultController {
         return results.count
     }
     
+    
+    func filter(type: ResultType) {
+        let newResults = results.filter({$0.type == type})
+        results = newResults
+    }
+    
+    
     func performSearch(searchTerm: String, resultType: String?, completion: @escaping(Error?) -> () ) {
-        
+        results = []
         /// Unwrappe URL
         guard let url = baseUrl else { return }
         
@@ -60,6 +67,7 @@ class SearchResultController {
                     }
                     let searchResult = try decoder.decode(SearchResults.self, from: data)
                     self.results.append(contentsOf: searchResult.results)
+                    print(self.results.count)
                     completion(nil)
                 } catch {
                     print("Error decoding data: \(error)")

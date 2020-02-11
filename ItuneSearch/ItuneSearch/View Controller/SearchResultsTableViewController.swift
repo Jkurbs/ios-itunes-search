@@ -10,7 +10,6 @@ import UIKit
 
 class SearchResultsTableViewController: UITableViewController {
     
-    
     // MARK: - IBOutlet
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var segmentedControl: UISegmentedControl!
@@ -18,6 +17,7 @@ class SearchResultsTableViewController: UITableViewController {
     var type: String? {
         didSet {
             updateData()
+            tableView.reloadData()
         }
     }
     
@@ -63,17 +63,14 @@ class SearchResultsTableViewController: UITableViewController {
         return cell
     }
     
-    
     func updateData() {
-        if let searchTerm = searchBar.text {
-            searchResultsController.performSearch(searchTerm: searchTerm, resultType: type) { (error) in
-                if let error = error {
-                    print("error: \(error)")
-                    return
-                } else {
-                    DispatchQueue.main.async {
-                        self.tableView.reloadData()
-                    }
+        searchResultsController.performSearch(searchTerm: searchBar.text ?? "", resultType: type) { (error) in
+            if let error = error {
+                print("error: \(error)")
+                return
+            } else {
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
                 }
             }
         }
